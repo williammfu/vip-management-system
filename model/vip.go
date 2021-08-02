@@ -13,8 +13,8 @@ type Vip struct {
 	CountryOfOrigin string    `json:"country_of_origin"`
 	ETA             time.Time `json:"eta"`
 	Photo           string    `json:"photo"`
-	Attributes      []string  `json:"attributes"`
 	Arrived         bool      `json:"arrived"`
+	Attributes      []string  `json:"attributes"`
 }
 
 var db *gorm.DB
@@ -42,5 +42,5 @@ func CreateVip(g Guest, d []Description) Vip {
 	for _, atr := range d {
 		ta = append(ta, atr.Attribute)
 	}
-	return Vip{g.ID, g.Name, g.CountryOfOrigin, g.ETA, g.Photo, ta, g.Arrived}
+	return Vip{g.ID, g.Name, g.CountryOfOrigin, g.ETA, g.Photo, g.Arrived, ta}
 }
