@@ -117,12 +117,19 @@ func UpdateVip(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+type Arrival struct {
+	Arrived bool `json:"arrived"`
+}
+
 func ArrivedVip(w http.ResponseWriter, r *http.Request) {
 	var guest model.Guest
+	var arrival Arrival
 
 	w.Header().Set("Content-Type", "application/json")
 	db.Where("id = ?", mux.Vars(r)["id"]).First(&guest)
-	guest.Arrived = true
+
+	json.NewDecoder(r.Body).Decode(&arrival)
+	guest.Arrived = arrival.Arrived
 	result := db.Save(&guest)
 
 	if result.Error != nil {
