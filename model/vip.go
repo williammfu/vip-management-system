@@ -8,15 +8,7 @@ import (
 )
 
 type Vip struct {
-	Name            string    `json:"name"`
-	CountryOfOrigin string    `json:"country_of_origin"`
-	ETA             time.Time `json:"eta"`
-	Photo           string    `json:"photo"`
-	Attributes      []string  `json:"attributes"`
-}
-
-type VipWID struct {
-	ID              int       `json:"id"`
+	ID              int       `json:"id" gorm:"primaryKey"`
 	Name            string    `json:"name"`
 	CountryOfOrigin string    `json:"country_of_origin"`
 	ETA             time.Time `json:"eta"`
@@ -49,13 +41,5 @@ func CreateVip(g Guest, d []Description) Vip {
 	for _, atr := range d {
 		ta = append(ta, atr.Attribute)
 	}
-	return Vip{g.Name, g.CountryOfOrigin, g.ETA, g.Photo, ta}
-}
-
-func CreateVipWID(g Guest, d []Description) VipWID {
-	var ta []string
-	for _, atr := range d {
-		ta = append(ta, atr.Attribute)
-	}
-	return VipWID{g.ID, g.Name, g.CountryOfOrigin, g.ETA, g.Photo, ta}
+	return Vip{g.ID, g.Name, g.CountryOfOrigin, g.ETA, g.Photo, ta}
 }

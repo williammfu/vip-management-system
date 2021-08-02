@@ -18,6 +18,18 @@ type Response struct {
 	Message string `json:"message"`
 }
 
+type ResponseData struct {
+	Ok      bool      `json:"ok"`
+	Data    model.Vip `json:"data"`
+	Message string    `json:"message"`
+}
+
+type ResponseDataList struct {
+	Ok      bool        `json:"ok"`
+	Data    []model.Vip `json:"data"`
+	Message string      `json:"message"`
+}
+
 func init() {
 	config.Connect()
 	db = config.GetDB()
@@ -36,13 +48,13 @@ func StoreVip(w http.ResponseWriter, r *http.Request) {
 		resDesc := db.Create(&desc)
 
 		if resDesc.Error != nil {
-			json.NewEncoder(w).Encode(Response{false, "Error 2"})
+			json.NewEncoder(w).Encode(Response{false, "Error"})
 		} else {
 			json.NewEncoder(w).Encode(Response{true, "Success"})
 		}
 
 	} else {
-		json.NewEncoder(w).Encode(Response{false, "Error 1"})
+		json.NewEncoder(w).Encode(Response{false, "Error"})
 	}
 }
 
@@ -58,7 +70,7 @@ func RetrieveVip(w http.ResponseWriter, r *http.Request) {
 	} else {
 		var descriptions []model.Description
 		db.Where("id = ?", guest.ID).Find(&descriptions)
-		json.NewEncoder(w).Encode(model.CreateVip(guest, descriptions))
+		json.NewEncoder(w).Encode(ResponseData{true, model.CreateVip(guest, descriptions), "Success"})
 	}
 }
 
@@ -75,7 +87,7 @@ func RetrieveAllVips(w http.ResponseWriter, r *http.Request) {
 		vips = append(vips, model.CreateVip(guest, descriptions))
 	}
 
-	json.NewEncoder(w).Encode(vips)
+	json.NewEncoder(w).Encode(ResponseDataList{true, vips, "success"})
 }
 
 func UpdateVip(w http.ResponseWriter, r *http.Request) {

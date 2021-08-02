@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"log"
 
 	"gorm.io/driver/mysql"
@@ -9,8 +10,21 @@ import (
 
 var db *gorm.DB
 
+type DBInfo struct {
+	Username string
+	Password string
+	Host     string
+	Port     string
+}
+
 func Connect() {
-	dataSourceName := "root@tcp(localhost:3306)/vip_system?parseTime=True"
+	dbInfo := DBInfo{
+		Username: "root",
+		Password: "",
+		Host:     "localhost",
+		Port:     "3306"}
+	dataSourceName := fmt.Sprintf("%s:%s@tcp(%s:%s)/vip_system?parseTime=True",
+		dbInfo.Username, dbInfo.Password, dbInfo.Host, dbInfo.Port)
 	d, err := gorm.Open(mysql.Open(dataSourceName), &gorm.Config{})
 
 	if err != nil {
